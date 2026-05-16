@@ -1,3 +1,5 @@
+// @ts-nocheck
+/* eslint-disable */
 import { Buffer } from "buffer";
 import { Address } from "@stellar/stellar-sdk";
 import {

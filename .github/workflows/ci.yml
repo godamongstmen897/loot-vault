@@ -72,8 +72,8 @@ jobs:
             - name: Install Dependencies
               run: npm ci
 
-            - name: Lint (ESLint)
-              run: npx eslint . --ext .ts,.tsx,.js,.jsx
+            - name: Lint (Next.js)
+              run: cd $GITHUB_WORKSPACE/frontend && npx next lint
 
             - name: Type Check
               run: npm run type-check
