@@ -61,7 +61,8 @@ impl MercenaryBoard {
 
         // transfer tokens from client to contract
         let token_client = token::Client::new(&env, &token);
-        token_client.transfer(&client, &env.current_contract_address(), &total);
+        let contract_address = env.current_contract_address();
+        token_client.transfer(&client, &contract_address, &total);
 
         let escrow = Escrow {
             client: client.clone(),
@@ -118,7 +119,8 @@ impl MercenaryBoard {
 
         // transfer token amount from contract to freelancer
         let token_client = token::Client::new(&env, &escrow.token);
-        token_client.transfer(&env.current_contract_address(), &escrow.freelancer, &payout);
+        let contract_address = env.current_contract_address();
+        token_client.transfer(&contract_address, &escrow.freelancer, &payout);
 
         // update state
         m.status = MilestoneStatus::Approved;
@@ -150,7 +152,8 @@ impl MercenaryBoard {
 
         // transfer remaining tokens back to client
         let token_client = token::Client::new(&env, &escrow.token);
-        token_client.transfer(&env.current_contract_address(), &escrow.client, &unreleased);
+        let contract_address = env.current_contract_address();
+        token_client.transfer(&contract_address, &escrow.client, &unreleased);
 
         // mark all pending/submitted milestones as Approved=false and set released to total
         escrow.released_amount = escrow.total_amount;
