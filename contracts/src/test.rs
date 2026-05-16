@@ -1,8 +1,8 @@
 #![cfg(test)]
 
 use super::*;
-use soroban_sdk::{testutils::Address as _, vec, Address, Env, String};
 use soroban_sdk::token::{Client as TokenClient, StellarAssetClient};
+use soroban_sdk::{testutils::Address as _, vec, Address, Env, String};
 
 fn create_token<'a>(env: &Env, admin: &Address) -> (TokenClient<'a>, StellarAssetClient<'a>) {
     let contract_address = env.register_stellar_asset_contract_v2(admin.clone());
@@ -50,7 +50,14 @@ fn end_to_end_escrow_flow() {
     // Create job: client transfers total bounty into contract
     let job_id = String::from_str(&env, "job-abc-1");
     let refund_timelock = 10u32;
-    client.create_job(&job_id, &client_addr, &freelancer, &token_client.address, &milestones, &refund_timelock);
+    client.create_job(
+        &job_id,
+        &client_addr,
+        &freelancer,
+        &token_client.address,
+        &milestones,
+        &refund_timelock,
+    );
 
     // Freelancer submits work for milestone 0
     client.submit_work(&job_id, &0u32, &freelancer);

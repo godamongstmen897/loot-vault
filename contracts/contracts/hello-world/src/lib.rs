@@ -1,5 +1,5 @@
 #![no_std]
-use soroban_sdk::{contract, contractimpl, token, Address, Env, Symbol, vec, Vec};
+use soroban_sdk::{contract, contractimpl, token, vec, Address, Env, Symbol, Vec};
 
 #[contract]
 pub struct LootVault;
@@ -8,7 +8,9 @@ pub struct LootVault;
 impl LootVault {
     /// Initialize the contract with an admin (the Quest Master)
     pub fn init(env: Env, admin: Address) {
-        env.storage().instance().set(&Symbol::new(&env, "Admin"), &admin);
+        env.storage()
+            .instance()
+            .set(&Symbol::new(&env, "Admin"), &admin);
     }
 
     pub fn deposit(env: Env, user: Address, token: Address, amount: i128) {
@@ -21,10 +23,16 @@ impl LootVault {
         env.storage().persistent().set(&user, &user_balance);
 
         // Track list of participants for the draw
-        let mut participants: Vec<Address> = env.storage().persistent().get(&Symbol::new(&env, "Players")).unwrap_or(vec![&env]);
+        let mut participants: Vec<Address> = env
+            .storage()
+            .persistent()
+            .get(&Symbol::new(&env, "Players"))
+            .unwrap_or(vec![&env]);
         if !participants.contains(&user) {
             participants.push_back(user);
-            env.storage().persistent().set(&Symbol::new(&env, "Players"), &participants);
+            env.storage()
+                .persistent()
+                .set(&Symbol::new(&env, "Players"), &participants);
         }
 
         let pool_key = Symbol::new(&env, "TotalPool");
@@ -35,7 +43,11 @@ impl LootVault {
 
     /// OPTION 1: Mock Yield - The Admin "injects" loot into the pool
     pub fn mock_generate_yield(env: Env, amount: i128) {
-        let admin: Address = env.storage().instance().get(&Symbol::new(&env, "Admin")).unwrap();
+        let admin: Address = env
+            .storage()
+            .instance()
+            .get(&Symbol::new(&env, "Admin"))
+            .unwrap();
         admin.require_auth();
 
         let yield_key = Symbol::new(&env, "LootYield");
@@ -46,22 +58,35 @@ impl LootVault {
 
     /// Pick a winner (Simplified for Mock version)
     pub fn draw_winner(env: Env) -> Address {
-        let admin: Address = env.storage().instance().get(&Symbol::new(&env, "Admin")).unwrap();
+        let admin: Address = env
+            .storage()
+            .instance()
+            .get(&Symbol::new(&env, "Admin"))
+            .unwrap();
         admin.require_auth();
 
-        let participants: Vec<Address> = env.storage().persistent().get(&Symbol::new(&env, "Players")).unwrap();
-        
+        let participants: Vec<Address> = env
+            .storage()
+            .persistent()
+            .get(&Symbol::new(&env, "Players"))
+            .unwrap();
+
         // Pseudo-random: In production (Option 2), we will use a proper VRF.
         // For now, we'll use the ledger sequence as a placeholder.
         let index = (env.ledger().sequence() % participants.len()) as u32;
         let winner = participants.get(index).unwrap();
 
-        env.storage().instance().set(&Symbol::new(&env, "LastWinner"), &winner);
+        env.storage()
+            .instance()
+            .set(&Symbol::new(&env, "LastWinner"), &winner);
         winner
     }
 
     pub fn get_loot_pool(env: Env) -> i128 {
-        env.storage().instance().get(&Symbol::new(&env, "LootYield")).unwrap_or(0)
+        env.storage()
+            .instance()
+            .get(&Symbol::new(&env, "LootYield"))
+            .unwrap_or(0)
     }
 }
 #[cfg(test)]

@@ -1,8 +1,8 @@
 #![cfg(test)]
 
 use super::*;
-use soroban_sdk::{testutils::Address as _, Env, Address};
 use soroban_sdk::token::{Client as TokenClient, StellarAssetClient};
+use soroban_sdk::{testutils::Address as _, Address, Env};
 
 // Helper function to securely mock a Stellar token in our test environment
 fn create_token<'a>(env: &Env, admin: &Address) -> (TokenClient<'a>, StellarAssetClient<'a>) {
@@ -42,7 +42,7 @@ fn test_complete_loot_vault_workflow() {
 
     // 7. Admin Draws Winner
     let winner = vault_client.draw_winner();
-    
+
     // Since 'user' is the only one who deposited, they MUST mathematically be the winner
     assert_eq!(winner, user);
 }
