@@ -1,0 +1,172 @@
+/*
+ * Glitch / Scan-Line Effects Module
+ * LitRPG "System Interface" visual language
+ * Each class is self-contained and can be applied to any element.
+ *
+ * Effects:
+ *   .glitch        — horizontal displacement + color channel split
+ *   .scan-lines    — semi-transparent horizontal line overlay
+ *   .screen-flicker — rapid opacity variation
+ *   .distort       — subtle skew / perspective warp
+ *
+ * All animations are CSS-only (no JavaScript) for performance.
+ * Durations: 300–500ms, looping or one-shot variants available.
+ */
+
+/* ========================================================
+   .glitch — color shift + horizontal displacement
+   Displacement: ±2–4px horizontal, RGB channel split
+   Duration: 400ms loop
+   ======================================================== */
+@keyframes glitch-shift {
+  0%, 100% {
+    transform: translate(0);
+    text-shadow: 0 0 transparent;
+  }
+  10% {
+    transform: translate(-3px, 1px);
+    text-shadow: 2px 0 #ff0040, -2px 0 #00ffcc;
+  }
+  20% {
+    transform: translate(3px, -1px);
+    text-shadow: -2px 0 #ff0040, 2px 0 #00ffcc;
+  }
+  30% {
+    transform: translate(-2px, 0);
+    text-shadow: 1px 0 #ff0040, -1px 0 #00ffcc;
+  }
+  40% {
+    transform: translate(2px, 1px);
+    text-shadow: -1px 0 #ff0040, 1px 0 #00ffcc;
+  }
+  50% {
+    transform: translate(0);
+    text-shadow: none;
+  }
+}
+
+.glitch {
+  animation: glitch-shift 400ms infinite;
+}
+
+/* One-shot variant — plays once on load / class toggle */
+@keyframes glitch-shift-once {
+  0% { transform: translate(0); text-shadow: none; }
+  15% { transform: translate(-4px, 1px); text-shadow: 2px 0 #ff0040, -2px 0 #00ffcc; }
+  30% { transform: translate(3px, -1px); text-shadow: -2px 0 #ff0040, 2px 0 #00ffcc; }
+  50% { transform: translate(-2px, 0); text-shadow: 1px 0 #ff0040; }
+  70% { transform: translate(2px, 0); text-shadow: -1px 0 #00ffcc; }
+  100% { transform: translate(0); text-shadow: none; }
+}
+
+.glitch--once {
+  animation: glitch-shift-once 500ms ease-out forwards;
+}
+
+
+/* ========================================================
+   .scan-lines — horizontal line overlay
+   Line height: 2px, semi-transparent white
+   Duration: 500ms scroll loop
+   ======================================================== */
+@keyframes scanline-scroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+
+.scan-lines {
+  position: relative;
+}
+
+.scan-lines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(255, 255, 255, 0.03) 2px,
+    rgba(255, 255, 255, 0.03) 4px
+  );
+  animation: scanline-scroll 500ms linear infinite;
+  z-index: 10;
+}
+
+
+/* ========================================================
+   .screen-flicker — opacity flicker
+   Subtle 300ms loop, opacity dips to 0.85
+   ======================================================== */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  5% { opacity: 0.88; }
+  10% { opacity: 1; }
+  15% { opacity: 0.92; }
+  20% { opacity: 1; }
+  50% { opacity: 0.96; }
+  80% { opacity: 1; }
+  85% { opacity: 0.90; }
+  90% { opacity: 1; }
+}
+
+.screen-flicker {
+  animation: flicker 300ms infinite;
+}
+
+/* Heavier flicker variant — more noticeable */
+.screen-flicker--heavy {
+  animation: flicker-heavy 300ms infinite;
+}
+
+@keyframes flicker-heavy {
+  0%, 100% { opacity: 1; }
+  10% { opacity: 0.7; }
+  20% { opacity: 1; }
+  40% { opacity: 0.85; }
+  60% { opacity: 1; }
+  80% { opacity: 0.75; }
+  90% { opacity: 1; }
+}
+
+
+/* ========================================================
+   .distort — skew / perspective warp
+   Subtle 2–3 degree skew, 500ms loop
+   ======================================================== */
+@keyframes distort-warp {
+  0%, 100% {
+    transform: perspective(600px) rotateY(0deg) skewX(0deg);
+  }
+  20% {
+    transform: perspective(600px) rotateY(0.5deg) skewX(-1.5deg);
+  }
+  40% {
+    transform: perspective(600px) rotateY(-0.5deg) skewX(1deg);
+  }
+  60% {
+    transform: perspective(600px) rotateY(0.3deg) skewX(-0.5deg);
+  }
+  80% {
+    transform: perspective(600px) rotateY(-0.3deg) skewX(1.5deg);
+  }
+}
+
+.distort {
+  animation: distort-warp 500ms infinite;
+  transform-origin: center center;
+}
+
+/* One-shot variant */
+@keyframes distort-warp-once {
+  0% { transform: perspective(600px) skewX(0deg); }
+  25% { transform: perspective(600px) skewX(-3deg); }
+  50% { transform: perspective(600px) skewX(2deg); }
+  75% { transform: perspective(600px) skewX(-1deg); }
+  100% { transform: perspective(600px) skewX(0deg); }
+}
+
+.distort--once {
+  animation: distort-warp-once 500ms ease-out forwards;
+}
