@@ -8,9 +8,14 @@ export type ContractConfig = {
   rpcUrl?: string;
 };
 
-type ContractClients = {
+export type ContractClients = {
   vault: VaultClient;
   mercenaryBoard: MercenaryBoardClient;
+};
+
+type ResolvedRpcConfig = {
+  rpcUrl: string;
+  allowHttp: boolean;
 };
 
 const NETWORK_DEFAULTS = {
@@ -26,7 +31,7 @@ const NETWORK_DEFAULTS = {
 
 const clientCache = new Map<string, ContractClients>();
 
-function resolveRpcUrl(config: ContractConfig): string {
+function resolveRpcUrl(config: ContractConfig): ResolvedRpcConfig {
   const rawRpcUrl = config.rpcUrl ?? process.env.NEXT_PUBLIC_SOROBAN_RPC_URL ?? NETWORK_DEFAULTS[config.network].rpcUrl;
 
   let parsedUrl: URL;
@@ -40,7 +45,10 @@ function resolveRpcUrl(config: ContractConfig): string {
     throw new Error(`Soroban RPC URL must start with http:// or https://. Received "${rawRpcUrl}"`);
   }
 
-  return parsedUrl.toString();
+  return {
+    rpcUrl: parsedUrl.toString(),
+    allowHttp: parsedUrl.protocol === "http:",
+  };
 }
 
 function resolveContractAddress(envKeys: string[], label: string): string {
@@ -83,7 +91,7 @@ export function initializeContractClients(config: ContractConfig): ContractClien
     throw new Error(`Unsupported network "${String(config.network)}". Expected "testnet" or "mainnet".`);
   }
 
-  const rpcUrl = resolveRpcUrl(config);
+  const { rpcUrl, allowHttp } = resolveRpcUrl(config);
   const { vaultContractId, mercenaryBoardContractId } = resolveContractAddresses(config.network);
   const cacheKey = `${config.network}|${rpcUrl}|${vaultContractId}|${mercenaryBoardContractId}`;
   const cachedClients = clientCache.get(cacheKey);
@@ -94,6 +102,7 @@ export function initializeContractClients(config: ContractConfig): ContractClien
 
   const options = {
     rpcUrl,
+    allowHttp,
     networkPassphrase: networkSettings.networkPassphrase,
   };
 
