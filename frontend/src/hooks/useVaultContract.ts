@@ -159,6 +159,11 @@ function isNetworkError(error: unknown): boolean {
   }
 
   const message = error instanceof Error ? error.message : String(error);
+
+  if (message.startsWith("Soroban RPC URL")) {
+    return false;
+  }
+
   return /network|fetch|timeout|timed out|econn|socket|503|504|429|getaddrinfo|rpc/i.test(
     message,
   );
@@ -172,7 +177,11 @@ function isMissingContractData(error: unknown): boolean {
 function toHumanReadableError(error: unknown, action: string): Error {
   const message = error instanceof Error ? error.message : String(error);
 
-  if (message.startsWith("Missing ") || message.includes("must be a valid Stellar address")) {
+  if (
+    message.startsWith("Missing ") ||
+    message.startsWith("Soroban RPC URL") ||
+    message.includes("must be a valid Stellar address")
+  ) {
     return new Error(message);
   }
 
