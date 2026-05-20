@@ -3,6 +3,13 @@
 The integration harness lives in
 `src/lib/contracts/__tests__/bindings.integration.test.ts`.
 
+It covers the generated Loot Vault and Mercenary Board Testnet bindings,
+hook-ready client initialization, representative Vault and Board operation
+payloads, event listener callbacks, mocked Freighter signing, normalized
+contract errors, cache refresh/invalidation, and the generated binding browser
+Buffer shim. Freighter signing is mocked so the suite can run in CI without a
+wallet prompt.
+
 Run the default mocked/type-level suite:
 
 ```bash
