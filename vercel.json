@@ -1,0 +1,24 @@
+{
+  "buildCommand": "cd frontend && npm run build",
+  "outputDirectory": "frontend/.next",
+  "framework": "nextjs",
+  "env": {
+    "NEXT_PUBLIC_STELLAR_NETWORK": {
+      "description": "Stellar network to connect to (testnet or public)",
+      "default": "testnet"
+    },
+    "NEXT_PUBLIC_SOROBAN_RPC_URL": {
+      "description": "Soroban RPC endpoint URL",
+      "default": "https://soroban-testnet.stellar.org"
+    },
+    "NEXT_PUBLIC_MERCENARY_BOARD_CONTRACT_ID": {
+      "description": "Deployed Mercenary Board contract address",
+      "default": "CAF5QOC4HHHITUPDCBI3H64KZZHZKVXI5J5QGS4NLT3YE4CUGEESPSCA"
+    },
+    "NEXT_PUBLIC_LOOT_VAULT_CONTRACT_ID": {
+      "description": "Deployed Loot Vault contract address",
+      "default": "CBOCSNRLUDBBOOAVPECFHBR3TL6T576BZB6AVVBDFBDAXMBKFC573VYF"
+    }
+  },
+  "installCommand": "cd frontend && npm install"
+}

@@ -129,6 +129,25 @@ The backend listens for Soroban contract events and feeds real-time data to the 
 
 ---
 
+## 🌐 Live Demo
+
+**Try Loot Vault now:** [https://loot-vault.vercel.app](https://loot-vault.vercel.app)
+
+The frontend is live on Vercel and connected to Stellar Testnet. You'll need the **[Freighter Wallet](https://www.freighter.app/)** browser extension to interact with the contracts.
+
+### Smart Contracts (Testnet)
+
+Both core protocols are deployed and ready for interaction:
+
+| Contract | Address | Status |
+|----------|---------|--------|
+| **Mercenary Board** | `CAF5QOC4HHHITUPDCBI3H64KZZHZKVXI5J5QGS4NLT3YE4CUGEESPSCA` | ✅ Live |
+| **Loot Vault** | `CBOCSNRLUDBBOOAVPECFHBR3TL6T576BZB6AVVBDFBDAXMBKFC573VYF` | ✅ Live |
+
+For detailed deployment information, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+
+---
+
 ## 🎨 UI/UX: LitRPG System Aesthetic
 
 The Loot Vault frontend embraces a **dark, futuristic "System Interface"** inspired by sci-fi RPGs:
@@ -179,6 +198,7 @@ We've prepared a comprehensive backlog of 60 high-quality issues (1,200 points t
 
 ## 📚 Documentation
 
+- **[Deployment Guide](./DEPLOYMENT.md)**: Frontend (Vercel), smart contracts, environment setup
 - **[Smart Contracts](./contracts/README.md)**: Soroban contract architecture, deployment, testing
 - **[Frontend](./frontend/README.md)**: Next.js setup, component library, TypeScript bindings
 - **[Backend](./backend/README.md)**: Event indexer, API routes, Axum patterns
