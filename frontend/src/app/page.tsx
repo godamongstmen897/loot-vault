@@ -1,3 +1,5 @@
+import { ContractStatePanel } from "../components/ContractStatePanel"
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white p-8">
@@ -34,6 +36,8 @@ export default function Home() {
             <li>✅ TypeScript</li>
           </ul>
         </div>
+
+        <ContractStatePanel />
 
         <div className="mt-8 text-center">
           <a
