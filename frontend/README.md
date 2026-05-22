@@ -20,6 +20,38 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Contract Client Configuration
+
+`frontend/src/lib/contracts/config.ts` exposes:
+
+- `initializeContractClients(config: ContractConfig)`
+- `ContractConfig = { network: "testnet" | "mainnet"; rpcUrl?: string }`
+
+Set contract IDs via environment variables:
+
+```bash
+# Required (testnet/mainnet-specific or shared fallback)
+NEXT_PUBLIC_LOOT_VAULT_CONTRACT_ID_TESTNET=...
+NEXT_PUBLIC_MERCENARY_BOARD_CONTRACT_ID_TESTNET=...
+
+# Optional network-specific overrides
+NEXT_PUBLIC_LOOT_VAULT_CONTRACT_ID_MAINNET=...
+NEXT_PUBLIC_MERCENARY_BOARD_CONTRACT_ID_MAINNET=...
+
+# Shared fallback if network-specific key is not set
+NEXT_PUBLIC_LOOT_VAULT_CONTRACT_ID=...
+NEXT_PUBLIC_MERCENARY_BOARD_CONTRACT_ID=...
+
+# Optional global RPC override
+NEXT_PUBLIC_SOROBAN_RPC_URL=https://soroban-testnet.stellar.org
+```
+
+Behavior:
+
+- RPC URL is validated (`http://` or `https://` required)
+- Contract IDs are validated as Soroban contract addresses
+- Clients are memoized by network + RPC + contract IDs to avoid re-initialization
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
