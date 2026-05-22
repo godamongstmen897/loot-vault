@@ -1,65 +1,133 @@
-import Image from "next/image";
+import { AssetGrid } from "../src/components/AssetGrid";
+import type { Asset } from "../src/types";
+
+const mockAssets: Asset[] = [
+  {
+    id: "xlm-yield",
+    name: "XLM Yield Pool",
+    amount: "2,480.50 XLM",
+    value: "$318.27",
+    icon: "XLM",
+    status: "active",
+    description: "Deposited balance generating pooled yield.",
+  },
+  {
+    id: "loot-ticket",
+    name: "Vault Entry Tickets",
+    amount: "18 tickets",
+    value: "$54.00",
+    icon: "TKT",
+    status: "active",
+    description: "Current draw participation receipts.",
+  },
+  {
+    id: "merc-escrow",
+    name: "Mercenary Escrow",
+    amount: "430 USDC",
+    value: "$430.00",
+    icon: "ESC",
+    status: "locked",
+    description: "Milestone funds held until delivery.",
+  },
+  {
+    id: "job-reward",
+    name: "Job Reward Pool",
+    amount: "92.4 XLM",
+    value: "$11.86",
+    icon: "JOB",
+    status: "pending",
+    description: "Awaiting client release confirmation.",
+  },
+  {
+    id: "rare-cache",
+    name: "Rare Cache NFT",
+    amount: "1 item",
+    value: "$72.00",
+    icon: "NFT",
+    status: "settled",
+    description: "Collected from a completed quest chain.",
+  },
+  {
+    id: "reputation",
+    name: "Reputation Credits",
+    amount: "1,220 REP",
+    value: "$0.00",
+    icon: "REP",
+    status: "active",
+    description: "Non-transferable freelancer standing.",
+  },
+  {
+    id: "daily-bonus",
+    name: "Daily Bonus Stash",
+    amount: "7 claims",
+    value: "$3.15",
+    icon: "DAY",
+    status: "pending",
+    description: "Unclaimed streak rewards.",
+  },
+  {
+    id: "guild-share",
+    name: "Guild Share",
+    amount: "4.8%",
+    value: "$96.42",
+    icon: "GLD",
+    status: "active",
+    description: "Revenue share from squad activity.",
+  },
+  {
+    id: "loot-bond",
+    name: "Loot Bond",
+    amount: "3 bonds",
+    value: "$150.00",
+    icon: "BND",
+    status: "locked",
+    description: "Timed vault position with unlock window.",
+  },
+  {
+    id: "spark-points",
+    name: "Spark Points",
+    amount: "8,910 SPK",
+    value: "$0.00",
+    icon: "SPK",
+    status: "active",
+    description: "Progression points for future perks.",
+  },
+  {
+    id: "dispute-reserve",
+    name: "Dispute Reserve",
+    amount: "125 USDC",
+    value: "$125.00",
+    icon: "DSP",
+    status: "locked",
+    description: "Held while arbitration is in progress.",
+  },
+  {
+    id: "winner-yield",
+    name: "Winner Yield",
+    amount: "64.2 XLM",
+    value: "$8.24",
+    icon: "WIN",
+    status: "settled",
+    description: "Paid from the last completed draw.",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main className="min-h-screen bg-black px-5 py-10 text-white sm:px-8">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
+        <header className="border-b border-cyan-400/30 pb-6">
+          <p className="text-sm uppercase text-cyan-300">Loot Vault Inventory</p>
+          <h1 className="mt-3 max-w-3xl text-4xl font-black uppercase text-white sm:text-6xl">
+            Asset Command Grid
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mt-4 max-w-2xl text-base leading-7 text-zinc-300">
+            Responsive asset cards for vault balances, escrowed job funds, NFTs, and reward positions.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        </header>
+
+        <AssetGrid assets={mockAssets} />
+      </div>
+    </main>
   );
 }
