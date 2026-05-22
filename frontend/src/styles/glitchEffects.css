@@ -1,0 +1,267 @@
+/*
+ * Reusable LitRPG malfunction effects.
+ * Tune each utility with CSS variables on the target element:
+ * --glitch-duration, --glitch-intensity, --scan-line-opacity,
+ * --scan-line-height, --flicker-duration, and --distort-angle.
+ */
+
+.glitch,
+.glitch-once,
+.scan-lines,
+.scan-lines-once,
+.screen-flicker,
+.screen-flicker-once,
+.distort,
+.distort-once {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.glitch,
+.glitch-once {
+  --glitch-duration: 420ms;
+  --glitch-intensity: 3px;
+  --glitch-cyan: rgba(34, 211, 238, 0.75);
+  --glitch-magenta: rgba(244, 114, 182, 0.7);
+  position: relative;
+  isolation: isolate;
+  animation: glitch-shift var(--glitch-duration) steps(2, end) infinite;
+  text-shadow:
+    calc(var(--glitch-intensity) * -0.6) 0 var(--glitch-cyan),
+    calc(var(--glitch-intensity) * 0.6) 0 var(--glitch-magenta);
+  will-change: transform, text-shadow;
+}
+
+.glitch-once {
+  animation-iteration-count: 1;
+}
+
+.glitch[data-glitch]::before,
+.glitch[data-glitch]::after,
+.glitch-once[data-glitch]::before,
+.glitch-once[data-glitch]::after {
+  content: attr(data-glitch);
+  inset: 0;
+  opacity: 0.52;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
+}
+
+.glitch[data-glitch]::before,
+.glitch-once[data-glitch]::before {
+  animation: glitch-channel-a var(--glitch-duration) steps(2, end) infinite;
+  color: var(--glitch-cyan);
+  clip-path: inset(0 0 46% 0);
+}
+
+.glitch[data-glitch]::after,
+.glitch-once[data-glitch]::after {
+  animation: glitch-channel-b var(--glitch-duration) steps(2, end) infinite;
+  color: var(--glitch-magenta);
+  clip-path: inset(54% 0 0 0);
+}
+
+.glitch-once[data-glitch]::before,
+.glitch-once[data-glitch]::after {
+  animation-iteration-count: 1;
+}
+
+.scan-lines,
+.scan-lines-once {
+  --scan-line-duration: 480ms;
+  --scan-line-height: 3px;
+  --scan-line-opacity: 0.22;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.scan-lines::after,
+.scan-lines-once::after {
+  animation: scan-line-drift var(--scan-line-duration) linear infinite;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, var(--scan-line-opacity)) 0,
+    rgba(255, 255, 255, var(--scan-line-opacity)) var(--scan-line-height),
+    transparent var(--scan-line-height),
+    transparent calc(var(--scan-line-height) * 2.4)
+  );
+  content: "";
+  inset: 0;
+  mix-blend-mode: screen;
+  opacity: 0.7;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.scan-lines-once::after {
+  animation-iteration-count: 1;
+}
+
+.screen-flicker,
+.screen-flicker-once {
+  --flicker-duration: 360ms;
+  animation: screen-flicker-pulse var(--flicker-duration) steps(5, end) infinite;
+  will-change: opacity;
+}
+
+.screen-flicker-once {
+  animation-iteration-count: 1;
+}
+
+.distort,
+.distort-once {
+  --distort-duration: 440ms;
+  --distort-angle: 1.2deg;
+  animation: distort-perspective var(--distort-duration) ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.distort-once {
+  animation-iteration-count: 1;
+}
+
+.effect-low {
+  --glitch-intensity: 2px;
+  --scan-line-opacity: 0.14;
+  --distort-angle: 0.7deg;
+}
+
+.effect-high {
+  --glitch-intensity: 4px;
+  --scan-line-opacity: 0.28;
+  --distort-angle: 1.8deg;
+}
+
+.effect-paused,
+.effect-paused::before,
+.effect-paused::after {
+  animation-play-state: paused !important;
+}
+
+/* Main jitter: keeps displacement within 2-4px so the effect feels sharp but subtle. */
+@keyframes glitch-shift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    text-shadow:
+      calc(var(--glitch-intensity) * -0.6) 0 var(--glitch-cyan),
+      calc(var(--glitch-intensity) * 0.6) 0 var(--glitch-magenta);
+  }
+  22% {
+    transform: translate3d(calc(var(--glitch-intensity) * -1), 0, 0);
+  }
+  48% {
+    transform: translate3d(var(--glitch-intensity), 0, 0);
+    text-shadow:
+      var(--glitch-intensity) 0 var(--glitch-cyan),
+      calc(var(--glitch-intensity) * -1) 0 var(--glitch-magenta);
+  }
+  72% {
+    transform: translate3d(calc(var(--glitch-intensity) * 0.55), 0, 0);
+  }
+}
+
+/* Upper channel split: briefly offsets the cyan copy for terminal boot-up noise. */
+@keyframes glitch-channel-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  34% {
+    transform: translate3d(calc(var(--glitch-intensity) * -1), -1px, 0);
+  }
+  68% {
+    transform: translate3d(calc(var(--glitch-intensity) * 0.8), 1px, 0);
+  }
+}
+
+/* Lower channel split: moves opposite the cyan copy to create RGB separation. */
+@keyframes glitch-channel-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  28% {
+    transform: translate3d(calc(var(--glitch-intensity) * 0.9), 1px, 0);
+  }
+  62% {
+    transform: translate3d(calc(var(--glitch-intensity) * -0.7), -1px, 0);
+  }
+}
+
+/* Scan drift: nudges the 2-3px overlay down one band for a CRT refresh sweep. */
+@keyframes scan-line-drift {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(var(--scan-line-height) * 2.4));
+  }
+}
+
+/* Flicker: uses small opacity dips instead of full flashes to avoid nausea. */
+@keyframes screen-flicker-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  18% {
+    opacity: 0.92;
+  }
+  36% {
+    opacity: 0.98;
+  }
+  58% {
+    opacity: 0.88;
+  }
+  76% {
+    opacity: 0.96;
+  }
+}
+
+/* Distortion: adds a slight skew and perspective wobble without changing layout. */
+@keyframes distort-perspective {
+  0%,
+  100% {
+    transform: translateZ(0) skewX(0deg) perspective(800px) rotateY(0deg);
+  }
+  45% {
+    transform: translateZ(0) skewX(var(--distort-angle)) perspective(800px) rotateY(0.55deg);
+  }
+  70% {
+    transform: translateZ(0) skewX(calc(var(--distort-angle) * -0.7)) perspective(800px) rotateY(-0.45deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glitch,
+  .glitch-once,
+  .screen-flicker,
+  .screen-flicker-once,
+  .distort,
+  .distort-once,
+  .glitch::before,
+  .glitch::after,
+  .glitch-once::before,
+  .glitch-once::after,
+  .scan-lines::after,
+  .scan-lines-once::after {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .glitch,
+  .glitch-once {
+    text-shadow: none;
+  }
+
+  .scan-lines::after,
+  .scan-lines-once::after {
+    opacity: 0.16;
+  }
+}

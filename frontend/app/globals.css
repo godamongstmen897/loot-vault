@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../src/styles/glitchEffects.css";
 
 :root {
   --background: #ffffff;
